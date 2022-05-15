@@ -76,6 +76,7 @@ FontFiles::MemoryBlock *FontFiles::GetFontFileMemory(const std::string &abs_path
         }
         fclose(file);
         font_files_[abs_path] = &memory_block;
+        LOGI << "Loaded font from file: " << abs_path << std::endl;
         return &memory_block;
     }
 }
@@ -177,10 +178,18 @@ FT_GlyphSlot FontRendererImpl::RenderCharacterBitmap(int face_id, uint32_t chara
     FT_Face face = faces_[face_id].face;
     // Get index of a glyph
     int glyph_index = FT_Get_Char_Index(face, character);
+    if ( ! glyph_index ) {
+      FT_String* family = face->family_name;
+      FT_String* style = face->style_name;
+
+      LOGW << "Undefined character code: " << character
+           << " family: " << family << ", style: " << style << std::endl;
+    }
     // Load glyph into slot
-    int error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
+    int error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT );
     if (error) {
-        FatalError("Error", "Failed to load font glyph into slot");
+      LOGE << "Failed to load font glyph into slot" << std::endl;
+      return face->glyph;
     }
     // Render glyph in slot
     if (flags & FontRenderer::RCB_RENDER) {

@@ -60,7 +60,9 @@ void Asset::IncrementRefCount() {
     if (owner) {
         owner->IncrementAsset(asset_id);
     } else {
-        LOGE << "This asset was orphaned before it was destroyed, someone was holding a reference too long" << std::endl;
+        LOGE << "Asset " << asset_id << " (" << path_
+             << ") was orphaned before it was destroyed, "
+             << "someone was holding a reference too long" << std::endl;
     }
 }
 
@@ -68,6 +70,8 @@ void Asset::DecrementRefCount() {
     if (owner) {
         owner->DecrementAsset(asset_id);
     } else {
-        LOGE << "This asset was orphaned before it was destroyed, someone was holding a reference too long" << std::endl;
+        LOGE << "Asset " << asset_id << " (" << path_
+             << ") was orphaned before it was destroyed, "
+             << "someone was holding a reference too long" << std::endl;
     }
 }

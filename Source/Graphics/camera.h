@@ -398,11 +398,11 @@ class ActiveCameras {
         return Instance()->active;
     }
 
-    static Camera* GetCamera(int camera_id) {
+    static Camera* GetCamera(unsigned int camera_id) {
         if (camera_id >= 255) {
-            int virtual_camera_index = camera_id - 255;
+            unsigned int virtual_camera_index = camera_id - 255;
 
-            if (virtual_camera_index >= 0 && virtual_camera_index < Instance()->virtual_cameras.size()) {
+            if (virtual_camera_index < Instance()->virtual_cameras.size()) {
                 return &Instance()->virtual_cameras[virtual_camera_index];
             } else {
                 return nullptr;
@@ -414,7 +414,7 @@ class ActiveCameras {
                 return Instance()->camera_ptrs[camera_id];
             }
 #endif
-            if (camera_id >= 0 && camera_id < Instance()->camera_ptrs.size()) {
+            if (camera_id < Instance()->camera_ptrs.size()) {
                 return Instance()->camera_ptrs[camera_id];
             } else {
                 return nullptr;
